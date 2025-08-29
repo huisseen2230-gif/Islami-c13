@@ -7,4 +7,5 @@ abstract final class ColorsManager{
   static const Color secondary = Color(0xff212121);
   static const Color teritary = Color(0xffFFFFFF);
   static  Color navItemBack = Color(0xff202020).withOpacity(0.6);
+  static  Color searchTextColor= Color(0xffFEFFE8);
 }
