@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:islami/model/suraModel.dart';
 import 'package:islami/style/assetsManager.dart';
 import 'package:islami/style/colorsManager.dart';
 import 'package:islami/style/constants.dart';
@@ -7,9 +8,17 @@ import 'package:islami/style/stringsManager.dart';
 import 'package:islami/ui/home/widgets/RecentlySuraWidget.dart';
 import 'package:islami/ui/home/widgets/suraWidget.dart';
 
-class QuranTab extends StatelessWidget {
-  const QuranTab({super.key});
+class QuranTab extends StatefulWidget {
+  @override
+  State<QuranTab> createState() => _QuranTabState();
+}
 
+class _QuranTabState extends State<QuranTab> {
+  List<SuraModel> filterList = [];
+
+  String searchValue = "" ;
+
+  List<SuraModel> mostRecentList = [] ;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -26,7 +35,7 @@ class QuranTab extends StatelessWidget {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(
+            padding: EdgeInsets.symmetric(
               horizontal: 20
             ),
             child: Column(
@@ -37,6 +46,12 @@ class QuranTab extends StatelessWidget {
                     child: Image.asset(AssetsManager.logo)),
 
                 TextField(
+                  onChanged: (value){
+                   setState(() {
+                     searchValue = value ;
+                     searchSura(value);
+                   });
+                  },
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 16,
@@ -82,19 +97,25 @@ class QuranTab extends StatelessWidget {
                   ) ,
                 ),
                 SizedBox(height: 20,),
-                Text(StringsManager.mostRecently,style: TextStyle(
-                  fontSize: 16,
-                  fontFamily: "janna",
-                  fontWeight: FontWeight.w700,
-                  color: ColorsManager.searchTextColor,
-                ),),
-               Expanded(
-                 child: ListView.separated(
-                   scrollDirection: Axis.horizontal ,
-                     itemBuilder: (context,index)=>RecentlySuraWidget(),
-                     separatorBuilder: (context,index)=>SizedBox(width: 20,),
-                     itemCount: 10),
-               ),
+                if(searchValue.isEmpty)
+                  ...[
+                    Text(StringsManager.mostRecently,style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: "janna",
+                      fontWeight: FontWeight.w700,
+                      color: ColorsManager.searchTextColor,
+                    ),),
+                    Expanded(
+                      child: ListView.separated(
+                          scrollDirection: Axis.horizontal ,
+                          itemBuilder: (context,index)=>RecentlySuraWidget(
+                            suraModel: mostRecentList[index],
+                          ),
+                          separatorBuilder: (context,index)=>SizedBox(width: 20,),
+                          itemCount: mostRecentList.length
+                      ),
+                    ),
+                  ],
                 Text(StringsManager.surasList,style: TextStyle(
                   fontSize: 16,
                   fontFamily: "janna",
@@ -105,9 +126,21 @@ class QuranTab extends StatelessWidget {
                 Expanded(
                   flex: 2,
                   child: ListView.separated(
-                      itemCount: suraList.length,
+                      itemCount: searchValue.isNotEmpty
+                          ?filterList.length
+                          :suraList.length ,
                       itemBuilder: (context,index)=> SuraWidget(
-                        suraModel: suraList[index],
+                        addToRecent: (){
+                          mostRecentList.insert(0,searchValue.isNotEmpty
+                              ?filterList[index]
+                              :suraList[index]);
+                          setState(() {
+
+                          });
+                        },
+                        suraModel: searchValue.isNotEmpty
+                            ?filterList[index]
+                            :suraList[index],
                       ),
                     separatorBuilder: (context,index)=>Padding(
                       padding:  EdgeInsets.symmetric(
@@ -126,5 +159,22 @@ class QuranTab extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  searchSura(String searchText){
+    filterList = [] ;
+  // for(int i = 0 ;i<suraList.length ; i++){
+  //  if( suraList[i].suraNameEn.contains(searchText) ||
+  //      suraList[i].suraNameAr.contains(searchText)||
+  //      suraList[i].suraNumber.toString().contains(searchText)
+  //  ){
+  //   filterList.add(suraList[i]);
+  //  }
+  // }
+    filterList = suraList.where((element)=>
+        element.suraNameEn.toLowerCase().contains(searchText.toLowerCase()) ||
+        element.suraNameAr.contains(searchText)||
+        element.suraNumber.toString().contains(searchText)
+    ).toList();
   }
 }

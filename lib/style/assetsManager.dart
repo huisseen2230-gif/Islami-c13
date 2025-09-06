@@ -2,8 +2,8 @@ abstract final class AssetsManager {
   static const String splash = "assets/images/Splash Screen.png";
   static const String ahadeeth = "assets/images/ahadeeth.svg";
   static const String ahadeethBack = "assets/images/Hadeth Screen.png";
-  static const String leftCorner = "assets/images/left_corner.svg";
-  static const String rightCorner = "assets/images/right_corner.svg";
+  static const String leftCorner = "assets/images/left_corner.png";
+  static const String rightCorner = "assets/images/right_corner.png";
   static const String logo = "assets/images/logo.png";
   static const String quran = "assets/images/quran.svg";
   static const String quranBack = "assets/images/quran_Background.png";
@@ -16,4 +16,6 @@ abstract final class AssetsManager {
   static const String quranCard = "assets/images/quran_card.png";
   static const String radioBack= "assets/images/radio_back.png";
   static const String suraNumber= "assets/images/sura_number.svg";
+  static const String suraTextBack= "assets/images/mosque.png";
+
 }
