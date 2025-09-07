@@ -4,6 +4,7 @@ import 'package:islami/model/suraModel.dart';
 import 'package:islami/style/assetsManager.dart';
 import 'package:islami/style/colorsManager.dart';
 import 'package:islami/style/constants.dart';
+import 'package:islami/style/prefsHelper.dart';
 import 'package:islami/style/stringsManager.dart';
 import 'package:islami/ui/home/widgets/RecentlySuraWidget.dart';
 import 'package:islami/ui/home/widgets/suraWidget.dart';
@@ -15,10 +16,16 @@ class QuranTab extends StatefulWidget {
 
 class _QuranTabState extends State<QuranTab> {
   List<SuraModel> filterList = [];
-
   String searchValue = "" ;
-
   List<SuraModel> mostRecentList = [] ;
+
+  @override
+  void initState() {
+
+    super.initState();
+    mostRecentList = PrefsHelper.getRecentList() ;
+
+  }
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -99,7 +106,8 @@ class _QuranTabState extends State<QuranTab> {
                 SizedBox(height: 20,),
                 if(searchValue.isEmpty)
                   ...[
-                    Text(StringsManager.mostRecently,style: TextStyle(
+                    if(mostRecentList.isNotEmpty)
+                   ...[ Text(StringsManager.mostRecently,style: TextStyle(
                       fontSize: 16,
                       fontFamily: "janna",
                       fontWeight: FontWeight.w700,
@@ -114,7 +122,7 @@ class _QuranTabState extends State<QuranTab> {
                           separatorBuilder: (context,index)=>SizedBox(width: 20,),
                           itemCount: mostRecentList.length
                       ),
-                    ),
+                    ),],
                   ],
                 Text(StringsManager.surasList,style: TextStyle(
                   fontSize: 16,
@@ -131,9 +139,17 @@ class _QuranTabState extends State<QuranTab> {
                           :suraList.length ,
                       itemBuilder: (context,index)=> SuraWidget(
                         addToRecent: (){
-                          mostRecentList.insert(0,searchValue.isNotEmpty
-                              ?filterList[index]
-                              :suraList[index]);
+                         for(int i =0 ;i<mostRecentList.length ;i++){
+                          if(mostRecentList[i]==(searchValue.isNotEmpty
+                              ?filterList[index].suraNameEn
+                              :suraList[index].suraNameEn)){
+                            mostRecentList.removeAt(i);
+                          }
+                         }
+                         mostRecentList.insert(0,searchValue.isNotEmpty
+                             ?filterList[index]
+                             :suraList[index]);
+                          PrefsHelper.addRecentList(mostRecentList);
                           setState(() {
 
                           });
