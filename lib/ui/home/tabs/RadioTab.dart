@@ -10,7 +10,7 @@ class RadioTab extends StatelessWidget {
       decoration: BoxDecoration(
         image: DecorationImage(
             image: AssetImage(AssetsManager.radioBack),
-            fit: BoxFit.fitWidth
+            fit: BoxFit.fill
         ),
       ),
     );
