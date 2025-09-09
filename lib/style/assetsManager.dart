@@ -18,5 +18,6 @@ abstract final class AssetsManager {
   static const String suraNumber= "assets/images/sura_number.svg";
   static const String suraTextBack= "assets/images/mosque.png";
   static const String sebhaCard= "assets/images/Sebha.png";
+  static const String hadithCardBack= "assets/images/HadithCardBackGround 1.png";
 
 }
